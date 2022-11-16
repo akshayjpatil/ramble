@@ -8,7 +8,7 @@ import {
 	Toolbar,
 	Typography,
 } from '@mui/material';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
@@ -33,7 +33,7 @@ export const DefaultLayout = ({ children }: DefaultLayoutProps) => {
 						<Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
 							{`Messages`}
 						</Typography>
-						<IconButton color='inherit'>
+						<IconButton color='inherit' onClick={() => signOut()}>
 							<Avatar alt='profile image' src={`${data?.user?.image}`} />
 						</IconButton>
 					</Toolbar>
