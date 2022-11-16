@@ -19,7 +19,7 @@ export const Home = () => {
     { name: "Champa", phone: "981-123-1231", truncatedLastMessage: "Hola!" },
   ];
   return (
-    <Container disableGutters>
+    <Container disableGutters maxWidth={false}>
       <Box flexGrow={1}>
         <AppBar position="static" sx={{ mb: 2 }}>
           <Toolbar>
