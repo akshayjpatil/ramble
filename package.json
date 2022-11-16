@@ -10,6 +10,17 @@
     "prepack": "pinst --disable",
     "postpack": "pinst --enable"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "**/*.{ts.tsx,js}": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
@@ -32,6 +43,7 @@
     "eslint": "8.27.0",
     "eslint-config-next": "13.0.2",
     "husky": "^8.0.2",
+    "lint-staged": "^13.0.3",
     "typescript": "4.8.4"
   }
 }
