@@ -22,14 +22,15 @@ const stringAvatar = (name: string) => {
 };
 
 export const ContactItem = ({
+	userId,
 	name,
 	truncatedLastMessage: lastMessage,
 }: ContactItemProps) => {
 	const router = useRouter();
 
 	const handleOnContactClick = useCallback(() => {
-		router.push({ pathname: '/message' });
-	}, [router]);
+		router.push({ pathname: `/${userId}` });
+	}, [router, userId]);
 
 	return (
 		<ListItem disablePadding>
