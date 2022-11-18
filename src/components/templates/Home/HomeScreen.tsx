@@ -1,15 +1,19 @@
 import * as React from 'react';
+import { Contact } from '../../../types/contact.type';
 import { ContactList } from '../../organisms/ContactList';
-import { Contact } from '../../../types/main.types';
 import { DefaultLayout } from '../../organisms/DefaultLayout';
 
 export const Home = () => {
 	const dummyContacts: Contact[] = [
-		{ name: 'Aisha', phone: '981-123-1231', truncatedLastMessage: 'Hi!' },
-		{ name: 'Champa', phone: '981-123-1231', truncatedLastMessage: 'Hola!' },
+		{ name: 'Aisha', email: 'aisha@aisha.com', truncatedLastMessage: 'Hi!' },
+		{
+			name: 'Champa',
+			email: 'champa@champa.com',
+			truncatedLastMessage: 'Hola!',
+		},
 	];
 	return (
-		<DefaultLayout>
+		<DefaultLayout title='Messages'>
 			<ContactList contacts={dummyContacts} />
 		</DefaultLayout>
 	);

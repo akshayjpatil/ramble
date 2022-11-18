@@ -5,7 +5,7 @@ import { DefaultLayout } from '../../organisms/DefaultLayout';
 
 export const Message = () => {
 	return (
-		<DefaultLayout>
+		<DefaultLayout back title={''}>
 			<Paper>
 				{
 					// TODO: messages
