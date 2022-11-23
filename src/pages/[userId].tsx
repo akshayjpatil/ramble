@@ -1,3 +1,4 @@
-import { Message } from '../components/templates/MessageScreen.tsx';
-
-export default Message;
+export {
+	MessageScreen as default,
+	getServerSideProps,
+} from '../components/templates/MessageScreen.tsx';

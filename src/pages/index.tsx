@@ -1,3 +1,1 @@
-import { Home } from '../components/templates/Home';
-
-export default Home;
+export { Home as default } from '../components/templates/Home';

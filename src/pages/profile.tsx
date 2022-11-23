@@ -1,3 +1,1 @@
-import { ProfileScreen } from '../components/templates/Profile';
-
-export default ProfileScreen;
+export { ProfileScreen as default } from '../components/templates/Profile';

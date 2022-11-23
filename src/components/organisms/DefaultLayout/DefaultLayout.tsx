@@ -23,10 +23,12 @@ import { boolean } from 'yup';
 export type DefaultLayoutProps = {
 	title: string;
 	back?: boolean;
+	home?: boolean;
 	children: React.ReactNode;
 };
 export const DefaultLayout = ({
 	children,
+	home = false,
 	back = false,
 	title,
 }: DefaultLayoutProps) => {
@@ -63,15 +65,17 @@ export const DefaultLayout = ({
 						<Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
 							{title}
 						</Typography>
-						<IconButton
-							color='inherit'
-							aria-controls={open ? 'user-menu' : undefined}
-							aria-haspopup='true'
-							aria-expanded={open ? 'true' : undefined}
-							onClick={handleMenuClick}
-						>
-							<Avatar alt='profile image' src={`${data?.user?.image}`} />
-						</IconButton>
+						{home && (
+							<IconButton
+								color='inherit'
+								aria-controls={open ? 'user-menu' : undefined}
+								aria-haspopup='true'
+								aria-expanded={open ? 'true' : undefined}
+								onClick={handleMenuClick}
+							>
+								<Avatar alt='profile image' src={`${data?.user?.image}`} />
+							</IconButton>
+						)}
 					</Toolbar>
 				</AppBar>
 				<Menu

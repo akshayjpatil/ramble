@@ -5,7 +5,7 @@ import { DefaultLayout } from '../../organisms/DefaultLayout';
 
 export const Home = () => {
 	return (
-		<DefaultLayout title='Messages'>
+		<DefaultLayout title='Messages' home>
 			<ContactList contacts={dummyContacts} />
 		</DefaultLayout>
 	);

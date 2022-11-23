@@ -4,7 +4,7 @@ A simple chat application built wiht NextJs, Next-Auth, MongoDB, Mongoose.
 
 ## Features
 
-    - Moderation of chats by dissallowing a list of non-usable language
+- Moderation of chats by dissallowing a list of non-usable language
 
 ### Auth setup if you want to deploy it yourself
 
