@@ -18,7 +18,7 @@ import { useCallback, useEffect } from 'react';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { boolean } from 'yup';
+import { useUser } from '../../../hooks/useUser';
 
 export type DefaultLayoutProps = {
 	title: string;
@@ -33,6 +33,7 @@ export const DefaultLayout = ({
 	title,
 }: DefaultLayoutProps) => {
 	const { status, data } = useSession();
+	const { updateUserLastSeen } = useUser();
 	const router = useRouter();
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
@@ -44,9 +45,17 @@ export const DefaultLayout = ({
 	};
 
 	useEffect(() => {
-		if (status === 'unauthenticated')
-			router.replace({ pathname: '/api/auth/signin' });
-	}, [status, router]);
+		switch (status) {
+			case 'authenticated':
+				updateUserLastSeen(data.user?.email as string);
+				break;
+			case 'unauthenticated':
+				router.replace({ pathname: '/api/auth/signin' });
+				break;
+			default:
+				break;
+		}
+	}, [status, router, data, updateUserLastSeen]);
 
 	const handleSignOut = useCallback(() => {
 		signOut();
