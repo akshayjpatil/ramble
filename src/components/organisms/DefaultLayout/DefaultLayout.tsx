@@ -138,13 +138,13 @@ export const DefaultLayout = ({
 						<ListItemIcon>
 							<AccountCircleIcon />
 						</ListItemIcon>
-						<ListItemText>Profile</ListItemText>
+						<ListItemText>{'Profile'}</ListItemText>
 					</MenuItem>
 					<MenuItem onClick={handleSignOut}>
 						<ListItemIcon>
 							<LogoutIcon />
 						</ListItemIcon>
-						<ListItemText>Sign-out</ListItemText>
+						<ListItemText>{'Sign-out'}</ListItemText>
 					</MenuItem>
 				</Menu>
 			</Box>

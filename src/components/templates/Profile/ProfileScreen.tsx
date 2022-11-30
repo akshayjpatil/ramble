@@ -21,7 +21,7 @@ type FormData = {
 	email: string;
 };
 
-export const ProfileScreen = (props: ProfileScreenProps) => {
+export const ProfileScreen = () => {
 	const { data } = useSession();
 	const { user, updateUser } = useUser();
 	const {
@@ -76,7 +76,7 @@ export const ProfileScreen = (props: ProfileScreenProps) => {
 					disabled
 				/>
 				<Button variant='contained' onClick={submit} disabled={!isDirty}>
-					Save
+					{'Save'}
 				</Button>
 			</Stack>
 		</DefaultLayout>

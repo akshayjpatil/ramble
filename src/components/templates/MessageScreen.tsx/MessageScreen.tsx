@@ -76,7 +76,7 @@ export const MessageScreen: NextPage<MessageScreenProps> = ({
 				};
 
 				// dispatch message to other users
-				const resp = await fetch('/api/chat', {
+				await fetch('/api/chat', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
