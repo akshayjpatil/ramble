@@ -1433,6 +1433,19 @@
   dependencies:
     tslib "^2.4.0"
 
+"@tanstack/query-core@4.18.0":
+  version "4.18.0"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-4.18.0.tgz#3e166ce319fd869c668536384ae94d174ea46a59"
+  integrity sha512-PP4mG8MD08sq64RZCqMfXMYfaj7+Oulwg7xZ/fJoEOdTZNcPIgaOkHajZvUBsNLbi/0ViMvJB4cFkL2Jg2WPbw==
+
+"@tanstack/react-query@^4.18.0":
+  version "4.18.0"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-4.18.0.tgz#d9c661364b383fca79f5384cb97b445354068faa"
+  integrity sha512-s1kdbGMdVcfUIllzsHUqVUdktBT5uuIRgnvrqFNLjl9TSOXEoBSDrhjsGjao0INQZv8cMpQlgOh3YH9YtN6cKw==
+  dependencies:
+    "@tanstack/query-core" "4.18.0"
+    use-sync-external-store "^1.2.0"
+
 "@types/cookie@^0.4.1":
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/@types/cookie/-/cookie-0.4.1.tgz#bfd02c1f2224567676c1545199f87c3a861d878d"
@@ -1453,10 +1466,22 @@
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.189.tgz#975ff8c38da5ae58b751127b19ad5e44b5b7f6d2"
   integrity sha512-kb9/98N6X8gyME9Cf7YaqIMvYGnBSWqEci6tiettE6iJWH1XdJz/PO8LB0GtLCG7x8dU3KWhZT+lA1a35127tA==
 
+"@types/mongodb@^4.0.7":
+  version "4.0.7"
+  resolved "https://registry.yarnpkg.com/@types/mongodb/-/mongodb-4.0.7.tgz#ebaa80c53b684ea52ccfe7721c0f5c9ef7b4f511"
+  integrity sha512-lPUYPpzA43baXqnd36cZ9xxorprybxXDzteVKCPAdp14ppHtFJHnXYvNpmBvtMUTb5fKXVv6sVbzo1LHkWhJlw==
+  dependencies:
+    mongodb "*"
+
 "@types/node@*", "@types/node@18.11.9", "@types/node@>=10.0.0":
   version "18.11.9"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.9.tgz#02d013de7058cea16d36168ef2fc653464cfbad4"
   integrity sha512-CRpX21/kGdzjOpFsZSkcrXMGIBWMGNIHXXBVFSH+ggkftxg+XYP20TESbh+zFvFj3EQOl5byk0HTRn1IL6hbqg==
+
+"@types/node@^16.10.2":
+  version "16.18.3"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.18.3.tgz#d7f7ba828ad9e540270f01ce00d391c54e6e0abc"
+  integrity sha512-jh6m0QUhIRcZpNv7Z/rpN+ZWXOicUUQbSoWks7Htkbb9IjFQj4kzcX/xFCkjstCj5flMsN8FiSvt+q+Tcs4Llg==
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"
@@ -1892,15 +1917,24 @@ convert-source-map@^1.5.0, convert-source-map@^1.7.0:
   resolved "https://registry.yarnpkg.com/convert-source-map/-/convert-source-map-1.9.0.tgz#7faae62353fb4213366d0ca98358d22e8368b05f"
   integrity sha512-ASFBup0Mz1uyiIjANan1jzLQami9z1PoYSZCiiYW2FczPbenXc45FZdBZLzOT+r6+iciuEModtmCti+hjaAk0A==
 
+cookie@^0.4.0, cookie@~0.4.1:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.4.2.tgz#0e41f24de5ecf317947c82fc789e06a884824432"
+  integrity sha512-aSWTXFzaKWkvHO1Ny/s+ePFpvKsPnjc551iI41v3ny/ow6tBG5Vd+FuqGNhh1LxOmVzOlGUriIlOaokOvhaStA==
+
 cookie@^0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.5.0.tgz#d1f5d71adec6558c58f389987c366aa47e994f8b"
   integrity sha512-YZ3GUyn/o8gfKJlnlX7g7xq4gyO6OSuhGPKaaGssGB2qgDUS0gPgtTvoyZLTt9Ab6dC4hfc9dV5arkvc/OCmrw==
 
-cookie@~0.4.1:
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.4.2.tgz#0e41f24de5ecf317947c82fc789e06a884824432"
-  integrity sha512-aSWTXFzaKWkvHO1Ny/s+ePFpvKsPnjc551iI41v3ny/ow6tBG5Vd+FuqGNhh1LxOmVzOlGUriIlOaokOvhaStA==
+cookies-next@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/cookies-next/-/cookies-next-2.1.1.tgz#8d82f1b78fccfb19d9d7c26766fa5707a3ec4695"
+  integrity sha512-AZGZPdL1hU3jCjN2UMJTGhLOYzNUN9Gm+v8BdptYIHUdwz397Et1p+sZRfvAl8pKnnmMdX2Pk9xDRKCGBum6GA==
+  dependencies:
+    "@types/cookie" "^0.4.1"
+    "@types/node" "^16.10.2"
+    cookie "^0.4.0"
 
 core-js-pure@^3.25.1:
   version "3.26.0"
@@ -3032,6 +3066,18 @@ mongodb-connection-string-url@^2.5.4:
     "@types/whatwg-url" "^8.2.1"
     whatwg-url "^11.0.0"
 
+mongodb@*:
+  version "4.12.1"
+  resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-4.12.1.tgz#224eb39b8784af835b515aa687c6010cecaabb1a"
+  integrity sha512-koT87tecZmxPKtxRQD8hCKfn+ockEL2xBiUvx3isQGI6mFmagWt4f4AyCE9J4sKepnLhMacoCTQQA6SLAI2L6w==
+  dependencies:
+    bson "^4.7.0"
+    mongodb-connection-string-url "^2.5.4"
+    socks "^2.7.1"
+  optionalDependencies:
+    "@aws-sdk/credential-providers" "^3.186.0"
+    saslprep "^1.0.3"
+
 mongodb@^4.12.0:
   version "4.12.0"
   resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-4.12.0.tgz#cbf14d4bc7f9d320d16e5971f76d8b8a36af7752"
@@ -3921,10 +3967,15 @@ uri-js@^4.2.2:
   dependencies:
     punycode "^2.1.0"
 
-use-sync-external-store@1.2.0:
+use-sync-external-store@1.2.0, use-sync-external-store@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/use-sync-external-store/-/use-sync-external-store-1.2.0.tgz#7dbefd6ef3fe4e767a0cf5d7287aacfb5846928a"
   integrity sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==
+
+usehooks-ts@^2.9.1:
+  version "2.9.1"
+  resolved "https://registry.yarnpkg.com/usehooks-ts/-/usehooks-ts-2.9.1.tgz#953d3284851ffd097432379e271ce046a8180b37"
+  integrity sha512-2FAuSIGHlY+apM9FVlj8/oNhd+1y+Uwv5QNkMQz1oSfdHk4PXo1qoCw9I5M7j0vpH8CSWFJwXbVPeYDjLCx9PA==
 
 uuid@^8.3.2:
   version "8.3.2"

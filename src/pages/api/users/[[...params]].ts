@@ -30,7 +30,7 @@ class UserHandler {
 		@Body() data: User,
 		@Res() res: NextApiResponse
 	) {
-		return await userService.updateUser(email, data);
+		await userService.updateUser(email, data);
 	}
 }
 

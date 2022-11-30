@@ -1,15 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { connect } from 'socket.io-client';
-import {
-	AppBar,
-	Avatar,
-	Box,
-	IconButton,
-	List,
-	ListItem,
-	ListItemAvatar,
-	ListItemText,
-} from '@mui/material';
+import { AppBar, Box, IconButton, List } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { DefaultLayout } from '../../organisms/DefaultLayout';
 import { GetServerSideProps, NextPage } from 'next';
@@ -30,6 +21,10 @@ const validationSchema = Yup.object().shape({
 	message: Yup.string().required('Did you forget to type?'),
 });
 
+type FormData = {
+	message: string;
+};
+
 export const MessageScreen: NextPage<MessageScreenProps> = ({
 	host,
 	userId,
@@ -43,7 +38,7 @@ export const MessageScreen: NextPage<MessageScreenProps> = ({
 		handleSubmit,
 		formState: { errors },
 		reset,
-	} = useForm({
+	} = useForm<FormData>({
 		resolver: yupResolver(validationSchema),
 		reValidateMode: 'onBlur',
 	});

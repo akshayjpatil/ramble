@@ -1,47 +1,55 @@
-import { useRouter } from 'next/router';
-import { useCallback } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { getCookie } from 'cookies-next';
+import { USER_EMAIL_COOKIE } from '../constants/cookie.constant';
 import { User } from '../types/user.type';
 
-export const useUser = () => {
-	const router = useRouter();
-	const updateUserLastSeen = useCallback(
-		async (email: string): Promise<void> => {
-			await fetch(`/api/users/${email}`, {
-				method: 'PUT',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ lastSeen: `${Date.now()}` }),
-			})
-				.then((res) => {
-					const resp = res.json() as unknown as User;
-					if (!resp.name) {
-						router.replace({ pathname: '/profile' });
-					}
-				})
-				.catch((error) => {
-					console.error(error);
-				});
+const getUser = async (emailId: string) =>
+	await fetch('/api/users/' + emailId, {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
 		},
-		[router]
-	);
+	}).then((res) => res.json());
 
-	const updateUser = useCallback(async (user: User): Promise<void> => {
-		await fetch(`/api/users/${user.email}`, {
-			method: 'PUT',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({ ...user, lastSeen: `${Date.now()}` } as User),
-		})
-			.then((res) => console.log(res))
-			.catch((error) => {
-				console.error(error);
-			});
-	}, []);
+const updateUser = async ({ email, user }: { email: string; user: User }) =>
+	await fetch(`/api/users/${email}`, {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({ ...user, lastSeen: `${Date.now()}` } as User),
+	})
+		.then((res) => res.json())
+		.catch((error) => {
+			console.error(error);
+		});
+
+export const useUser = () => {
+	const userEmail = getCookie(USER_EMAIL_COOKIE);
+	const queryClient = useQueryClient();
+
+	const userQueryKey = ['user', userEmail];
+
+	const { data: user } = useQuery<User, Error>({
+		queryKey: userQueryKey,
+		queryFn: () => getUser(userEmail as string),
+	});
+
+	const mutation = useMutation<User, Error, User>({
+		mutationKey: userQueryKey,
+		mutationFn: (user: User) =>
+			updateUser({ email: userEmail as string, user }),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: userQueryKey });
+		},
+		onError: (error) => {
+			console.error('unable to update user', `${error}`);
+		},
+	});
 
 	return {
-		updateUserLastSeen,
-		updateUser,
+		user,
+		isLoading: queryClient.isFetching || queryClient.isMutating,
+		updateUser: mutation.mutateAsync,
 	};
 };

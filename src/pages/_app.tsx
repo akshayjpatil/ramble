@@ -7,7 +7,7 @@ import { CacheProvider, EmotionCache } from '@emotion/react';
 import theme from '../theme';
 import createEmotionCache from '../createEmotionCache';
 import { SessionProvider } from 'next-auth/react';
-
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 
@@ -21,18 +21,24 @@ export default function App(props: MyAppProps) {
 		emotionCache = clientSideEmotionCache,
 		pageProps: { session, ...pageProps },
 	} = props;
+	const queryClient = new QueryClient();
 	return (
-		<SessionProvider session={session}>
-			<CacheProvider value={emotionCache}>
-				<Head>
-					<meta name='viewport' content='initial-scale=1, width=device-width' />
-				</Head>
-				<ThemeProvider theme={theme}>
-					{/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-					<CssBaseline />
-					<Component {...pageProps} />
-				</ThemeProvider>
-			</CacheProvider>
-		</SessionProvider>
+		<QueryClientProvider client={queryClient}>
+			<SessionProvider session={session}>
+				<CacheProvider value={emotionCache}>
+					<Head>
+						<meta
+							name='viewport'
+							content='initial-scale=1, width=device-width'
+						/>
+					</Head>
+					<ThemeProvider theme={theme}>
+						{/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+						<CssBaseline />
+						<Component {...pageProps} />
+					</ThemeProvider>
+				</CacheProvider>
+			</SessionProvider>
+		</QueryClientProvider>
 	);
 }

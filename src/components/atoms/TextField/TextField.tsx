@@ -3,11 +3,11 @@ import {
 	TextField as MuiTextField,
 	Typography,
 } from '@mui/material';
-import { Control, Controller, FieldValues } from 'react-hook-form';
+import { Control, Controller } from 'react-hook-form';
 
 export type TextFieldProps = Omit<MuiTextFieldProps, 'variant'> & {
 	name: string;
-	control: Control<FieldValues, any>;
+	control: Control<any, any>;
 	label: string;
 	errorText?: string | undefined;
 	multiline?: boolean;

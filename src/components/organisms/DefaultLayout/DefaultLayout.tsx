@@ -1,4 +1,5 @@
-import * as React from 'react';
+import { useCallback, useState, MouseEvent, useEffect } from 'react';
+import { useEffectOnce } from 'usehooks-ts';
 import {
 	AppBar,
 	Avatar,
@@ -14,11 +15,13 @@ import {
 } from '@mui/material';
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect } from 'react';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useUser } from '../../../hooks/useUser';
+import { setCookie } from 'cookies-next';
+import { USER_EMAIL_COOKIE } from '../../../constants/cookie.constant';
+import { User } from '../../../types/user.type';
 
 export type DefaultLayoutProps = {
 	title: string;
@@ -33,21 +36,33 @@ export const DefaultLayout = ({
 	title,
 }: DefaultLayoutProps) => {
 	const { status, data } = useSession();
-	const { updateUserLastSeen } = useUser();
+	const { user, updateUser } = useUser();
 	const router = useRouter();
-	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
-	const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+	const handleMenuClick = (event: MouseEvent<HTMLElement>) => {
 		setAnchorEl(event.currentTarget);
 	};
 	const handleMenuClose = () => {
 		setAnchorEl(null);
 	};
 
+	useEffectOnce(() => {
+		const updateLastSeen = async () => {
+			const updatedUser = {} as User;
+			if (!user?.name) {
+				updatedUser.name = data?.user?.name as string;
+			}
+			await updateUser(updatedUser);
+		};
+		if (status === 'authenticated') updateLastSeen();
+	});
+
 	useEffect(() => {
 		switch (status) {
 			case 'authenticated':
-				updateUserLastSeen(data.user?.email as string);
+				setCookie(USER_EMAIL_COOKIE, data.user?.email);
+
 				break;
 			case 'unauthenticated':
 				router.replace({ pathname: '/api/auth/signin' });
@@ -55,7 +70,7 @@ export const DefaultLayout = ({
 			default:
 				break;
 		}
-	}, [status, router, data, updateUserLastSeen]);
+	}, [data, router, status]);
 
 	const handleSignOut = useCallback(() => {
 		signOut();
