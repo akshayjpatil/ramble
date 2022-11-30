@@ -1,4 +1,3 @@
-import type { NextApiResponse } from 'next';
 import {
 	Body,
 	Catch,
@@ -7,7 +6,6 @@ import {
 	Param,
 	Post,
 	Put,
-	Res,
 } from 'next-api-decorators';
 import { UserErrorHandler, userService } from '../../../lib/user/user.service';
 import type { User } from '../../../types/user.type';
@@ -25,11 +23,7 @@ class UserHandler {
 	}
 
 	@Put('/:email')
-	public async updateUser(
-		@Param('email') email: string,
-		@Body() data: User,
-		@Res() res: NextApiResponse
-	) {
+	public async updateUser(@Param('email') email: string, @Body() data: User) {
 		await userService.updateUser(email, data);
 	}
 }

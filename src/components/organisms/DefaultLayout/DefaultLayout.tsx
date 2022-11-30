@@ -49,11 +49,7 @@ export const DefaultLayout = ({
 
 	useEffectOnce(() => {
 		const updateLastSeen = async () => {
-			const updatedUser = {} as User;
-			if (!user?.name) {
-				updatedUser.name = data?.user?.name as string;
-			}
-			await updateUser(updatedUser);
+			await updateUser({} as User);
 		};
 		if (status === 'authenticated') updateLastSeen();
 	});
