@@ -1,18 +1,15 @@
-import { NextApiRequest } from 'next';
+import { Body, createHandler, Post, Res } from 'next-api-decorators';
 
-import { NextApiResponseServerIO } from '../../types/response.type';
+import type { NextApiResponseServerIO } from '../../types/response.type';
 
-const handler = (req: NextApiRequest, res: NextApiResponseServerIO) => {
-	if (req.method === 'POST') {
-		// get message
-		const message = req.body;
-
-		// dispatch to channel "message"
-		res?.socket?.server?.io?.emit('message', message);
+class Chathandler {
+	@Post('/')
+	async emitMessage(@Body() message: any, @Res() res: NextApiResponseServerIO) {
+		await res?.socket?.server?.io?.emit('message', message);
 
 		// return message
-		res.status(201).json(message);
+		return await res.status(201).json(message);
 	}
-};
+}
 
-export default handler;
+export default createHandler(Chathandler);
