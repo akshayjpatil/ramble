@@ -32,4 +32,4 @@ const connectToDb = async (): Promise<Db> => {
 	return client.db('rambler_chat');
 };
 
-export { clientPromise, client, connectToDb };
+export { client, clientPromise, connectToDb };

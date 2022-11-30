@@ -1,4 +1,5 @@
 import { List } from '@mui/material';
+
 import { Contact } from '../../../types/contact.type';
 import { ContactItem, ContactItemProps } from '../../molecules/ContactItem';
 

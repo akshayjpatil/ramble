@@ -7,6 +7,7 @@ import {
 } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
+
 import { Contact } from '../../../types/contact.type';
 import { stringToColor } from '../../../util/converters';
 

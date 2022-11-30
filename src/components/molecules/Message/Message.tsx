@@ -1,6 +1,7 @@
-import { ListItem, ListItemAvatar, Avatar, ListItemText } from '@mui/material';
-import theme from '../../../theme';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { Avatar, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
+
+import theme from '../../../theme';
 
 export type MessageProps = {
 	username: string;

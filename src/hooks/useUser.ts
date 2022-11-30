@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getCookie } from 'cookies-next';
+
 import { USER_EMAIL_COOKIE } from '../constants/cookie.constant';
 import { User } from '../types/user.type';
 

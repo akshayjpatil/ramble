@@ -1,7 +1,6 @@
 import {
-	TextFieldProps as MuiTextFieldProps,
 	TextField as MuiTextField,
-	Typography,
+	TextFieldProps as MuiTextFieldProps,
 } from '@mui/material';
 import { Control, Controller } from 'react-hook-form';
 

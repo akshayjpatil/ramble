@@ -1,13 +1,14 @@
-import * as Yup from 'yup';
-import { useCallback, useEffect } from 'react';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Avatar, Button, Stack } from '@mui/material';
 import { useSession } from 'next-auth/react';
+import { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import * as Yup from 'yup';
+
 import { useUser } from '../../../hooks/useUser';
-import { DefaultLayout } from '../../organisms/DefaultLayout';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { TextField } from '../../atoms/TextField';
 import { User } from '../../../types/user.type';
+import { TextField } from '../../atoms/TextField';
+import { DefaultLayout } from '../../organisms/DefaultLayout';
 
 export type ProfileScreenProps = {};
 

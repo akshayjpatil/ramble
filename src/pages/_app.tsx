@@ -1,13 +1,14 @@
-import * as React from 'react';
-import Head from 'next/head';
-import { AppProps } from 'next/app';
-import { ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
 import { CacheProvider, EmotionCache } from '@emotion/react';
-import theme from '../theme';
-import createEmotionCache from '../createEmotionCache';
-import { SessionProvider } from 'next-auth/react';
+import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider } from '@mui/material/styles';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { AppProps } from 'next/app';
+import Head from 'next/head';
+import { SessionProvider } from 'next-auth/react';
+import * as React from 'react';
+
+import createEmotionCache from '../createEmotionCache';
+import theme from '../theme';
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 

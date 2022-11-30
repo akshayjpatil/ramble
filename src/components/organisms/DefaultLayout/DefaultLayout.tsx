@@ -1,5 +1,6 @@
-import { useCallback, useState, MouseEvent, useEffect } from 'react';
-import { useEffectOnce } from 'usehooks-ts';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import LogoutIcon from '@mui/icons-material/Logout';
 import {
 	AppBar,
 	Avatar,
@@ -13,14 +14,14 @@ import {
 	Toolbar,
 	Typography,
 } from '@mui/material';
-import { signOut, useSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
-import LogoutIcon from '@mui/icons-material/Logout';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { useUser } from '../../../hooks/useUser';
 import { setCookie } from 'cookies-next';
+import { useRouter } from 'next/router';
+import { signOut, useSession } from 'next-auth/react';
+import { MouseEvent, useCallback, useEffect, useState } from 'react';
+import { useEffectOnce } from 'usehooks-ts';
+
 import { USER_EMAIL_COOKIE } from '../../../constants/cookie.constant';
+import { useUser } from '../../../hooks/useUser';
 import { User } from '../../../types/user.type';
 
 export type DefaultLayoutProps = {
@@ -36,7 +37,7 @@ export const DefaultLayout = ({
 	title,
 }: DefaultLayoutProps) => {
 	const { status, data } = useSession();
-	const { user, updateUser } = useUser();
+	const { updateUser } = useUser();
 	const router = useRouter();
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);

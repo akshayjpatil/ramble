@@ -1,4 +1,5 @@
 import { NextApiRequest } from 'next';
+
 import { NextApiResponseServerIO } from '../../types/response.type';
 
 const handler = (req: NextApiRequest, res: NextApiResponseServerIO) => {

@@ -7,6 +7,7 @@ import {
 	Post,
 	Put,
 } from 'next-api-decorators';
+
 import { UserErrorHandler, userService } from '../../../lib/user/user.service';
 import type { User } from '../../../types/user.type';
 

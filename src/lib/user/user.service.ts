@@ -1,5 +1,6 @@
-import { HttpException } from 'next-api-decorators';
 import { NextApiRequest, NextApiResponse } from 'next/types';
+import { HttpException } from 'next-api-decorators';
+
 import type { User } from '../../types/user.type';
 import { connectToDb } from '../mongodb';
 
