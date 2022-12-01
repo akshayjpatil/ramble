@@ -18,7 +18,7 @@ import { setCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 import { signOut, useSession } from 'next-auth/react';
 import { MouseEvent, useCallback, useEffect, useState } from 'react';
-import { useEffectOnce } from 'usehooks-ts';
+import { useEffectOnce } from 'react-use';
 
 import { USER_EMAIL_COOKIE } from '../../../constants/cookie.constant';
 import { useUser } from '../../../hooks/useUser';

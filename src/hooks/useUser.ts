@@ -34,6 +34,8 @@ export const useUser = () => {
 	const { data: user } = useQuery<User, Error>({
 		queryKey: userQueryKey,
 		queryFn: () => getUser(userEmail as string),
+		initialData: {} as User,
+		placeholderData: {} as User,
 	});
 
 	const mutation = useMutation<User, Error, User>({
@@ -50,7 +52,7 @@ export const useUser = () => {
 
 	return {
 		user,
-		isLoading: queryClient.isFetching || queryClient.isMutating,
+		isLoading: queryClient.isFetching() || queryClient.isMutating(),
 		updateUser: mutation.mutateAsync,
 	};
 };

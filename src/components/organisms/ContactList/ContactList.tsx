@@ -1,18 +1,24 @@
 import { List } from '@mui/material';
 
-import { Contact } from '../../../types/contact.type';
+import { ChatList } from '../../../hooks/useChat';
 import { ContactItem, ContactItemProps } from '../../molecules/ContactItem';
 
 export type ContactListProps = {
-	contacts: Contact[];
+	chatList: ChatList;
 };
 
-export const ContactList = ({ contacts }: ContactListProps) => {
+const buildChatList = (chatList: ChatList) => {
+	const nodes: React.ReactNode[] = [];
+	for (const [key, value] of Object.entries(chatList)) {
+		nodes.push(<ContactItem key={key} {...(value as ContactItemProps)} />);
+	}
+	return nodes;
+};
+
+export const ContactList = ({ chatList }: ContactListProps) => {
 	return (
 		<List sx={{ width: '100%', bgcolor: 'background.paper' }} disablePadding>
-			{contacts.map((contact: Contact, index: number) => (
-				<ContactItem key={index} {...(contact as ContactItemProps)} />
-			))}
+			{buildChatList(chatList)}
 		</List>
 	);
 };
