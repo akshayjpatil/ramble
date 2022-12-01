@@ -10,14 +10,7 @@ class Chathandler {
 		@Param('sendChatKey') sendChatKey: string
 	) {
 		await res?.socket?.server?.io?.emit(sendChatKey, message);
-		// // update user contacts
-		// const userEmail = getSenderEmail(sendChatKey);
-		// const user = await userService.getUser(userEmail);
-		// await userService.updateUser(userEmail, {
-		// 	...user,
-		// 	contacts: [user?.contacts, {name: ''}],
-		// });
-		// return message
+
 		return await res.status(201).json(message);
 	}
 }
