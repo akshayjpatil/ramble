@@ -52,7 +52,7 @@ export const MessageScreen: NextPage<MessageScreenProps> = ({
 	useEffect((): any => {
 		// update chat on new message dispatched
 		async () =>
-			socket.on(getChatKey(email), (message: IMsg) => {
+			(await socket).on(getChatKey(email), (message: IMsg) => {
 				(chatList as ChatList)[`${email}`].messages?.push(message);
 				setChatList(chatList);
 			});
