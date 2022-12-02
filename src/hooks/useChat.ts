@@ -18,12 +18,8 @@ export const useChat = () => {
 	return {
 		chatList,
 		setChatList,
-		sendChatKey: useCallback(
-			(toEmail: string) => `${userEmail}-TO-${toEmail}`,
-			[userEmail]
-		),
-		recieveChatKey: useCallback(
-			(toEmail: string) => `${toEmail}-To-${userEmail}`,
+		getChatKey: useCallback(
+			(toEmail: string) => [userEmail, toEmail].sort().join(),
 			[userEmail]
 		),
 	};

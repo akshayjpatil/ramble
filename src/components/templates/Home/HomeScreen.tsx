@@ -1,17 +1,24 @@
 import MessageIcon from '@mui/icons-material/Message';
 import { Fab } from '@mui/material';
+import { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 
 import { ChatList, useChat } from '../../../hooks/useChat';
+import { useSocket } from '../../../hooks/useSocket';
 import { ContactList } from '../../organisms/ContactList';
 import { DefaultLayout } from '../../organisms/DefaultLayout';
 
-export const Home = () => {
+export type HomeScreenProps = {
+	host: string;
+};
+
+export const Home: NextPage<HomeScreenProps> = ({ host }: HomeScreenProps) => {
+	const { disconnectSocket } = useSocket(host);
 	const router = useRouter();
 	const { chatList } = useChat();
 	return (
-		<DefaultLayout title='Messages' home>
+		<DefaultLayout title='Messages' home disconnectSocket={disconnectSocket}>
 			<ContactList chatList={chatList as ChatList} />
 			<Fab
 				aria-label={'new-message'}
@@ -24,3 +31,11 @@ export const Home = () => {
 		</DefaultLayout>
 	);
 };
+
+export const getServerSideProps: GetServerSideProps<HomeScreenProps> = async (
+	context
+) => ({
+	props: {
+		host: context.req.headers.host || '',
+	},
+});

@@ -1,1 +1,4 @@
-export { Home as default } from '../components/templates/Home';
+export {
+	Home as default,
+	getServerSideProps,
+} from '../components/templates/Home';

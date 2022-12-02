@@ -10,7 +10,9 @@ import * as Yup from 'yup';
 import { USER_EMAIL_COOKIE } from '../../../constants/cookie.constant';
 import { ChatList, useChat } from '../../../hooks/useChat';
 import { useSocket } from '../../../hooks/useSocket';
+import { useContactUser } from '../../../hooks/useUser';
 import { Contact, IMsg } from '../../../types/contact.type';
+import { OnlineBadge } from '../../atoms/OnlineBadge';
 import { TextField } from '../../atoms/TextField';
 import { Message } from '../../molecules/Message';
 import { DefaultLayout } from '../../organisms/DefaultLayout';
@@ -29,9 +31,10 @@ export const MessageScreen: NextPage<MessageScreenProps> = ({
 	host,
 	email,
 }: MessageScreenProps) => {
-	const { socket, connected } = useSocket(host);
+	const { contactUser } = useContactUser({ email });
+	const { socket, connected, disconnectSocket } = useSocket(host);
 	const userEmail = getCookie(USER_EMAIL_COOKIE);
-	const { chatList, setChatList, sendChatKey, recieveChatKey } = useChat();
+	const { chatList, setChatList, getChatKey } = useChat();
 	const {
 		control,
 		handleSubmit,
@@ -49,25 +52,23 @@ export const MessageScreen: NextPage<MessageScreenProps> = ({
 	useEffect((): any => {
 		// update chat on new message dispatched
 		async () =>
-			(await socket).on(recieveChatKey(email), (message: IMsg) => {
+			socket.on(getChatKey(email), (message: IMsg) => {
 				(chatList as ChatList)[`${email}`].messages?.push(message);
 				setChatList(chatList);
 			});
-		// socket disconnet onUnmount if exists
-		if (socket) return () => async () => (await socket).disconnect();
-	}, [chatList, email, host, recieveChatKey, reset, setChatList, socket]);
+	}, [chatList, email, getChatKey, host, setChatList, socket]);
 
 	const sendMessage = useCallback(async () => {
 		await handleSubmit(async (data) => {
 			if (data.message) {
 				// build message obj
 				const message: IMsg = {
-					email: userEmail as string,
+					sender: userEmail as string,
 					message: data.message as string,
 				};
 
 				// dispatch message to other users
-				await fetch(`/api/chat/${sendChatKey(email)}`, {
+				await fetch(`/api/chat/${getChatKey(email)}`, {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
@@ -79,29 +80,37 @@ export const MessageScreen: NextPage<MessageScreenProps> = ({
 					(chatList as ChatList)[`${email}`] = contactList;
 					setChatList(chatList as ChatList);
 				});
+				reset();
 			}
 		})();
 	}, [
 		chatList,
 		contactList,
 		email,
+		getChatKey,
 		handleSubmit,
-		sendChatKey,
+		reset,
 		setChatList,
 		userEmail,
 	]);
 
 	return (
-		<DefaultLayout back title={contactList.name}>
-			<List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-				{(contactList.messages as IMsg[]).map((chat: IMsg, index: number) => (
-					<Message
-						key={index}
-						username={chat.email}
-						message={chat.message}
-						opponent={chat.email !== userEmail}
-					/>
-				))}
+		<DefaultLayout
+			back
+			title={contactList?.name || contactUser.name}
+			titleAdornment={<OnlineBadge online={contactUser?.online as boolean} />}
+			disconnectSocket={disconnectSocket}
+		>
+			<List sx={{ width: '100%', bgcolor: 'background.paper', my: 10 }}>
+				{contactList?.messages &&
+					(contactList?.messages as IMsg[]).map((chat: IMsg, index: number) => (
+						<Message
+							key={index}
+							username={chat.sender}
+							message={chat.message}
+							opponent={chat.sender !== userEmail}
+						/>
+					))}
 			</List>
 			<AppBar
 				component={'div'}

@@ -1,16 +1,30 @@
 import { Body, createHandler, Param, Post, Res } from 'next-api-decorators';
 
+import { chatService } from '../../../lib/chat/chat.service';
+import { userService } from '../../../lib/user/user.service';
+import type { IMsg } from '../../../types/contact.type';
 import type { NextApiResponseServerIO } from '../../../types/response.type';
 
 class Chathandler {
 	@Post('/:sendChatKey')
 	public async emitMessageToContact(
-		@Body() message: any,
+		@Body() message: IMsg,
 		@Res() res: NextApiResponseServerIO,
 		@Param('sendChatKey') sendChatKey: string
 	) {
-		await res?.socket?.server?.io?.emit(sendChatKey, message);
-
+		const emails = sendChatKey.split(',');
+		let allOnline = false;
+		emails.map(async (userEmail) => {
+			const user = await userService.getUser(userEmail);
+			if (!!user && user?.online) allOnline = true;
+		});
+		if (allOnline) await res?.socket?.server?.io?.emit(sendChatKey, message);
+		else {
+			await chatService
+				.sendMessage(sendChatKey, message as IMsg)
+				// eslint-disable-next-line no-console
+				.catch((e) => console.error(e));
+		}
 		return await res.status(201).json(message);
 	}
 }

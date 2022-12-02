@@ -32,7 +32,7 @@ export const NewMessageScreen: NextPage<NewMessageScreenProps> = ({
 }: NewMessageScreenProps) => {
 	const router = useRouter();
 	const userEmail = getCookie(USER_EMAIL_COOKIE);
-	const { connected } = useSocket(host);
+	const { connected, disconnectSocket } = useSocket(host);
 	const {
 		control,
 		handleSubmit,
@@ -42,7 +42,7 @@ export const NewMessageScreen: NextPage<NewMessageScreenProps> = ({
 		reValidateMode: 'onBlur',
 	});
 
-	const { chatList, setChatList, sendChatKey } = useChat();
+	const { chatList, setChatList, getChatKey } = useChat();
 
 	const sendMessage = useCallback(async () => {
 		await handleSubmit(async (data) => {
@@ -52,7 +52,7 @@ export const NewMessageScreen: NextPage<NewMessageScreenProps> = ({
 				message: data.message as string,
 			};
 			// dispatch message to other users
-			await fetch(`/api/chat/${sendChatKey(data.email)}`, {
+			await fetch(`/api/chat/${getChatKey(data.email)}`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ export const NewMessageScreen: NextPage<NewMessageScreenProps> = ({
 					email: data.email,
 					truncatedLastMessage: data.message,
 					messages: [
-						{ email: userEmail as string, message: data.message as string },
+						{ sender: userEmail as string, message: data.message as string },
 					],
 				};
 
@@ -73,10 +73,14 @@ export const NewMessageScreen: NextPage<NewMessageScreenProps> = ({
 
 			return router.back();
 		})();
-	}, [chatList, handleSubmit, router, sendChatKey, setChatList, userEmail]);
+	}, [chatList, getChatKey, handleSubmit, router, setChatList, userEmail]);
 
 	return (
-		<DefaultLayout back title={'New Message'}>
+		<DefaultLayout
+			back
+			title={'New Message'}
+			disconnectSocket={disconnectSocket}
+		>
 			<Stack component={'form'} spacing={1} px={2}>
 				<TextField
 					placeholder='Name?'

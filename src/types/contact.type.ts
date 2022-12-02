@@ -3,9 +3,12 @@ export type Contact = {
 	email: string;
 	truncatedLastMessage?: string;
 	messages?: IMsg[];
+	online?: boolean;
 };
 
 export type IMsg = {
-	email: string;
+	sender: string;
 	message: string;
 };
+
+export type Message = IMsg & { chatKey: string };

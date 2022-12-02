@@ -13,6 +13,7 @@ export const Message = ({
 	message,
 	opponent = false,
 }: MessageProps) => {
+	console.log(opponent);
 	return (
 		<ListItem
 			sx={{

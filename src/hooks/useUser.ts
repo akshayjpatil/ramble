@@ -56,3 +56,20 @@ export const useUser = () => {
 		updateUser: mutation.mutateAsync,
 	};
 };
+
+export const useContactUser = ({ email }: { email: string }) => {
+	const queryClient = useQueryClient();
+	const contactUserQueryKey = ['contact', email];
+
+	const { data: contact } = useQuery<User, Error>({
+		queryKey: contactUserQueryKey,
+		queryFn: () => getUser(email as string),
+		initialData: {} as User,
+		placeholderData: {} as User,
+	});
+
+	return {
+		contactUser: contact,
+		isLoading: queryClient.isFetching(),
+	};
+};

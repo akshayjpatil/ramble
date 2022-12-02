@@ -23,21 +23,26 @@ import { useEffectOnce } from 'react-use';
 import { USER_EMAIL_COOKIE } from '../../../constants/cookie.constant';
 import { useUser } from '../../../hooks/useUser';
 import { User } from '../../../types/user.type';
+import { OnlineBadge } from '../../atoms/OnlineBadge';
 
 export type DefaultLayoutProps = {
 	title: string;
+	titleAdornment?: React.ReactNode;
 	back?: boolean;
 	home?: boolean;
 	children: React.ReactNode;
+	disconnectSocket: () => Promise<void>;
 };
 export const DefaultLayout = ({
 	children,
 	home = false,
 	back = false,
 	title,
+	titleAdornment,
+	disconnectSocket,
 }: DefaultLayoutProps) => {
 	const { status, data } = useSession();
-	const { updateUser } = useUser();
+	const { user, updateUser } = useUser();
 	const router = useRouter();
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
@@ -47,12 +52,26 @@ export const DefaultLayout = ({
 	const handleMenuClose = () => {
 		setAnchorEl(null);
 	};
+	// Setup the `beforeunload` event listener
+	const setupBeforeUnloadListener = () => {
+		window.addEventListener('beforeunload', async (ev) => {
+			ev.preventDefault();
+			await disconnectSocket();
+			return await updateUser({ online: false } as User);
+		});
+	};
 
 	useEffectOnce(() => {
 		const updateLastSeen = async () => {
-			await updateUser({} as User);
+			await updateUser({
+				online: true,
+				profileImage: data?.user?.image,
+			} as User);
 		};
-		if (status === 'authenticated') updateLastSeen();
+		if (status === 'authenticated') {
+			updateLastSeen();
+			setupBeforeUnloadListener();
+		}
 	});
 
 	useEffect(() => {
@@ -72,20 +91,35 @@ export const DefaultLayout = ({
 	const handleSignOut = useCallback(() => {
 		signOut();
 	}, []);
+	if (typeof window === 'undefined') {
+		return <></>;
+	}
 
 	return (
-		<Container disableGutters maxWidth={false}>
-			<Box flexGrow={1}>
-				<AppBar position='static' sx={{ mb: 2 }}>
+		<Box flexGrow={1}>
+			<Container disableGutters maxWidth={false}>
+				<AppBar position='fixed' sx={{ mb: 2 }}>
 					<Toolbar>
 						{back && (
 							<IconButton color='inherit' onClick={() => router.back()}>
 								<ArrowBackIcon />
 							</IconButton>
 						)}
-						<Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
+
+						<Typography
+							variant='h6'
+							component={'div'}
+							sx={{
+								flexGrow: 1,
+								'.MuiBadge-root': {
+									marginLeft: 2,
+								},
+							}}
+						>
 							{title}
+							{titleAdornment}
 						</Typography>
+
 						{home && (
 							<IconButton
 								color='inherit'
@@ -94,7 +128,9 @@ export const DefaultLayout = ({
 								aria-expanded={open ? 'true' : undefined}
 								onClick={handleMenuClick}
 							>
-								<Avatar alt='profile image' src={`${data?.user?.image}`} />
+								<OnlineBadge online={user?.online as boolean}>
+									<Avatar alt='profile image' src={`${data?.user?.image}`} />
+								</OnlineBadge>
 							</IconButton>
 						)}
 					</Toolbar>
@@ -147,8 +183,8 @@ export const DefaultLayout = ({
 						<ListItemText>{'Sign-out'}</ListItemText>
 					</MenuItem>
 				</Menu>
-			</Box>
-			{children}
-		</Container>
+				{children}
+			</Container>
+		</Box>
 	);
 };

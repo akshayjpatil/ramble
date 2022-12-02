@@ -1,1 +1,4 @@
-export { ProfileScreen as default } from '../components/templates/Profile';
+export {
+	ProfileScreen as default,
+	getServerSideProps,
+} from '../components/templates/Profile';

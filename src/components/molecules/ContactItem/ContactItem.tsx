@@ -8,12 +8,18 @@ import {
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 
+import { useContactUser } from '../../../hooks/useUser';
 import { Contact } from '../../../types/contact.type';
 import { stringToColor } from '../../../util/converters';
+import { OnlineBadge } from '../../atoms/OnlineBadge';
 
 export type ContactItemProps = Contact;
 
-const stringAvatar = (name: string) => {
+const stringAvatar = (name: string, image: string | undefined) => {
+	if (image)
+		return {
+			src: `${image}`,
+		};
 	return {
 		sx: {
 			bgcolor: stringToColor(name),
@@ -28,6 +34,7 @@ export const ContactItem = ({
 	truncatedLastMessage: lastMessage,
 }: ContactItemProps) => {
 	const router = useRouter();
+	const { contactUser } = useContactUser({ email });
 
 	const handleOnContactClick = useCallback(() => {
 		router.push({ pathname: `/${email}` });
@@ -37,7 +44,9 @@ export const ContactItem = ({
 		<ListItem disablePadding>
 			<ListItemButton onClick={handleOnContactClick}>
 				<ListItemAvatar>
-					<Avatar {...stringAvatar(name)} />
+					<OnlineBadge online={!!contactUser?.online as boolean}>
+						<Avatar {...stringAvatar(name, contactUser.profileImage)} />
+					</OnlineBadge>
 				</ListItemAvatar>
 				<ListItemText primary={name} secondary={lastMessage} />
 			</ListItemButton>
