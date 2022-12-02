@@ -101,7 +101,7 @@ export const MessageScreen: NextPage<MessageScreenProps> = ({
 			titleAdornment={<OnlineBadge online={contactUser?.online as boolean} />}
 			disconnectSocket={disconnectSocket}
 		>
-			<List sx={{ width: '100%', bgcolor: 'background.paper', my: 10 }}>
+			<List sx={{ width: '100%', bgcolor: 'background.paper', mb: 10 }}>
 				{contactList?.messages &&
 					(contactList?.messages as IMsg[]).map((chat: IMsg, index: number) => (
 						<Message

@@ -28,9 +28,12 @@ export const useSocket = (host: string) => {
 		await (await socket).disconnect();
 	}, [socket]);
 
-	return {
-		socket,
-		connected,
-		disconnectSocket,
-	};
+	return useMemo(
+		() => ({
+			socket,
+			connected,
+			disconnectSocket,
+		}),
+		[connected, disconnectSocket, socket]
+	);
 };

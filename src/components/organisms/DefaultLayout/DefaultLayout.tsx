@@ -97,7 +97,7 @@ export const DefaultLayout = ({
 
 	return (
 		<Box flexGrow={1}>
-			<Container disableGutters maxWidth={false}>
+			<Container disableGutters maxWidth={false} sx={{ paddingTop: 10 }}>
 				<AppBar position='fixed' sx={{ mb: 2 }}>
 					<Toolbar>
 						{back && (
