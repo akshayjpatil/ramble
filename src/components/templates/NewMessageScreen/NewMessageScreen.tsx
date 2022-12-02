@@ -81,7 +81,7 @@ export const NewMessageScreen: NextPage<NewMessageScreenProps> = ({
 			title={'New Message'}
 			disconnectSocket={disconnectSocket}
 		>
-			<Stack component={'form'} spacing={1} px={2}>
+			<Stack component={'form'} spacing={1} px={2} paddingTop={10}>
 				<TextField
 					placeholder='Name?'
 					sx={{ width: '100%' }}
