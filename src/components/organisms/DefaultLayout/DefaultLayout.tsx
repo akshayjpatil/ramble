@@ -18,7 +18,6 @@ import { setCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 import { signOut, useSession } from 'next-auth/react';
 import { MouseEvent, useCallback, useEffect, useState } from 'react';
-import { useEffectOnce } from 'react-use';
 
 import { USER_EMAIL_COOKIE } from '../../../constants/cookie.constant';
 import { useUser } from '../../../hooks/useUser';
@@ -52,33 +51,27 @@ export const DefaultLayout = ({
 	const handleMenuClose = () => {
 		setAnchorEl(null);
 	};
-	// Setup the `beforeunload` event listener
-	const setupBeforeUnloadListener = () => {
-		window.addEventListener('beforeunload', async (ev) => {
-			ev.preventDefault();
-			await disconnectSocket();
-			return await updateUser({ online: false } as User);
-		});
-	};
 
-	useEffectOnce(() => {
+	useEffect(() => {
 		const updateLastSeen = async () => {
 			await updateUser({
 				online: true,
 				profileImage: data?.user?.image,
 			} as User);
 		};
-		if (status === 'authenticated') {
-			updateLastSeen();
-			setupBeforeUnloadListener();
-		}
-	});
-
-	useEffect(() => {
+		// Setup the `beforeunload` event listener
+		const setupBeforeUnloadListener = () => {
+			window.addEventListener('beforeunload', async (ev) => {
+				ev.preventDefault();
+				await disconnectSocket();
+				return await updateUser({ online: false } as User);
+			});
+		};
 		switch (status) {
 			case 'authenticated':
 				setCookie(USER_EMAIL_COOKIE, data.user?.email);
-
+				updateLastSeen();
+				setupBeforeUnloadListener();
 				break;
 			case 'unauthenticated':
 				router.replace({ pathname: '/api/auth/signin' });
@@ -86,7 +79,7 @@ export const DefaultLayout = ({
 			default:
 				break;
 		}
-	}, [data, router, status]);
+	}, [data, disconnectSocket, router, status, updateUser]);
 
 	const handleSignOut = useCallback(() => {
 		signOut();
