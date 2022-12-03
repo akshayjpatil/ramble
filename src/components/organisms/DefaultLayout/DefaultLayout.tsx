@@ -28,6 +28,7 @@ import { OnlineBadge } from '../../atoms/OnlineBadge';
 
 export type DefaultLayoutProps = {
 	title: string;
+	titleIcon?: React.ReactNode;
 	titleAdornment?: React.ReactNode;
 	back?: boolean;
 	home?: boolean;
@@ -39,6 +40,7 @@ export const DefaultLayout = ({
 	home = false,
 	back = false,
 	title,
+	titleIcon,
 	titleAdornment,
 	disconnectSocket,
 }: DefaultLayoutProps) => {
@@ -113,11 +115,17 @@ export const DefaultLayout = ({
 							component={'div'}
 							sx={{
 								flexGrow: 1,
+								display: 'flex',
+								alignItems: 'center',
+								'.MuiAvatar-root': {
+									marginRight: 2,
+								},
 								'.MuiBadge-root': {
 									marginLeft: 2,
 								},
 							}}
 						>
+							{titleIcon}
 							{title}
 							{titleAdornment}
 						</Typography>

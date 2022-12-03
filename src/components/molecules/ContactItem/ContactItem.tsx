@@ -10,23 +10,10 @@ import { useCallback } from 'react';
 
 import { useContactUser } from '../../../hooks/useUser';
 import { Contact } from '../../../types/contact.type';
-import { stringToColor } from '../../../util/converters';
+import { stringAvatar } from '../../../util/imageProcessors';
 import { OnlineBadge } from '../../atoms/OnlineBadge';
 
 export type ContactItemProps = Contact;
-
-const stringAvatar = (name: string, image: string | undefined) => {
-	if (image)
-		return {
-			src: `${image}`,
-		};
-	return {
-		sx: {
-			bgcolor: stringToColor(name),
-		},
-		children: `${name.split('')[0]}`,
-	};
-};
 
 export const ContactItem = ({
 	email,
@@ -40,12 +27,14 @@ export const ContactItem = ({
 		router.push({ pathname: `/${email}` });
 	}, [router, email]);
 
+	const avatarProps = stringAvatar(name, contactUser.profileImage);
+
 	return (
 		<ListItem disablePadding>
 			<ListItemButton onClick={handleOnContactClick}>
 				<ListItemAvatar>
 					<OnlineBadge online={!!contactUser?.online as boolean}>
-						<Avatar {...stringAvatar(name, contactUser.profileImage)} />
+						<Avatar {...avatarProps} />
 					</OnlineBadge>
 				</ListItemAvatar>
 				<ListItemText primary={name} secondary={lastMessage} />

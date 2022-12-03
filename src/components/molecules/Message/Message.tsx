@@ -1,19 +1,12 @@
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { Avatar, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
+import { ListItem, ListItemText } from '@mui/material';
 
 import theme from '../../../theme';
 
 export type MessageProps = {
-	username: string;
 	message: string;
 	opponent?: boolean;
 };
-export const Message = ({
-	username,
-	message,
-	opponent = false,
-}: MessageProps) => {
-	console.log(opponent);
+export const Message = ({ message, opponent = false }: MessageProps) => {
 	return (
 		<ListItem
 			sx={{
@@ -27,22 +20,16 @@ export const Message = ({
 				},
 			}}
 		>
-			<ListItemAvatar>
-				<Avatar>
-					<AccountCircleIcon />
-				</Avatar>
-			</ListItemAvatar>
 			<ListItemText
-				primary={username}
 				secondary={message}
 				sx={{
-					'.MuiListItemText-primary': {
-						...theme.typography.caption,
-						color: theme.palette.grey[500],
-					},
 					'.MuiListItemText-secondary': {
 						...theme.typography.body1,
-						color: theme.palette.grey[900],
+						color: theme.palette.common.white,
+						backgroundColor: opponent ? theme.palette.grey[500] : '#2385FB',
+						padding: 1,
+						borderRadius: 2,
+						display: 'inline-block',
 					},
 				}}
 			/>

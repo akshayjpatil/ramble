@@ -24,11 +24,3 @@ export const useChat = () => {
 		),
 	};
 };
-
-export const getSenderEmail = (key: string) => {
-	return key.split('-')[0];
-};
-
-export const getRecieverEmail = (key: string) => {
-	return key.split('-')[2];
-};

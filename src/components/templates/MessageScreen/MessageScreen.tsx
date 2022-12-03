@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import SendIcon from '@mui/icons-material/Send';
-import { AppBar, Box, IconButton, List } from '@mui/material';
+import { AppBar, Avatar, Box, IconButton, List } from '@mui/material';
 import { getCookie } from 'cookies-next';
 import { GetServerSideProps, NextPage } from 'next';
 import { useCallback, useEffect, useMemo } from 'react';
@@ -12,6 +12,7 @@ import { ChatList, useChat } from '../../../hooks/useChat';
 import { useSocket } from '../../../hooks/useSocket';
 import { useContactUser } from '../../../hooks/useUser';
 import { Contact, IMsg } from '../../../types/contact.type';
+import { stringAvatar } from '../../../util/imageProcessors';
 import { OnlineBadge } from '../../atoms/OnlineBadge';
 import { TextField } from '../../atoms/TextField';
 import { Message } from '../../molecules/Message';
@@ -48,6 +49,7 @@ export const MessageScreen: NextPage<MessageScreenProps> = ({
 		() => (chatList as ChatList)[`${email}`] as Contact,
 		[chatList, email]
 	);
+	const avatarProps = stringAvatar(contactUser.name, contactUser.profileImage);
 
 	useEffect((): any => {
 		// update chat on new message dispatched
@@ -98,6 +100,7 @@ export const MessageScreen: NextPage<MessageScreenProps> = ({
 		<DefaultLayout
 			back
 			title={contactList?.name || contactUser.name}
+			titleIcon={<Avatar component={'span'} {...avatarProps} />}
 			titleAdornment={<OnlineBadge online={contactUser?.online as boolean} />}
 			disconnectSocket={disconnectSocket}
 		>
@@ -106,7 +109,6 @@ export const MessageScreen: NextPage<MessageScreenProps> = ({
 					(contactList?.messages as IMsg[]).map((chat: IMsg, index: number) => (
 						<Message
 							key={index}
-							username={chat.sender}
 							message={chat.message}
 							opponent={chat.sender !== userEmail}
 						/>
