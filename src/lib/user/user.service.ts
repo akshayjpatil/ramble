@@ -60,6 +60,17 @@ class UserService {
 					{ upsert: true }
 				)) as unknown as User;
 	}
+	async checkIfUsersOnline(email1: string, email2: string): Promise<boolean> {
+		const db = await connectToDb();
+		const user1 = (await db
+			.collection('users')
+			.findOne({ email: email1 })) as unknown as User;
+		const user2 = (await db
+			.collection('users')
+			.findOne({ email: email2 })) as unknown as User;
+
+		return user1.online === true && user2.online === true;
+	}
 }
 
 export const userService = new UserService();

@@ -13,11 +13,10 @@ class Chathandler {
 		@Param('sendChatKey') sendChatKey: string
 	) {
 		const emails = sendChatKey.split(',');
-		let allOnline = false;
-		emails.map(async (userEmail) => {
-			const user = await userService.getUser(userEmail);
-			if (!!user && user?.online) allOnline = true;
-		});
+		const allOnline = await userService.checkIfUsersOnline(
+			emails[0],
+			emails[1]
+		);
 		if (allOnline) await res?.socket?.server?.io?.emit(sendChatKey, message);
 		else {
 			await chatService
