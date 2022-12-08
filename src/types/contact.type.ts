@@ -4,6 +4,7 @@ export type Contact = {
 	truncatedLastMessage?: string;
 	messages?: IMsg[];
 	online?: boolean;
+	newMessage?: boolean;
 };
 
 export type IMsg = {

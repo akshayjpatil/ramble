@@ -19,6 +19,7 @@ export const ContactItem = ({
 	email,
 	name,
 	truncatedLastMessage: lastMessage,
+	newMessage = false,
 }: ContactItemProps) => {
 	const router = useRouter();
 	const { contactUser } = useContactUser({ email });
@@ -37,7 +38,16 @@ export const ContactItem = ({
 						<Avatar {...avatarProps} />
 					</OnlineBadge>
 				</ListItemAvatar>
-				<ListItemText primary={name} secondary={lastMessage} />
+				<ListItemText
+					primary={name}
+					secondary={lastMessage}
+					sx={{
+						'.MuiListItemText-primary': { fontWeight: newMessage ? 900 : 400 },
+						'.MuiListItemText-secondary': {
+							fontWeight: newMessage ? 900 : 400,
+						},
+					}}
+				/>
 			</ListItemButton>
 		</ListItem>
 	);

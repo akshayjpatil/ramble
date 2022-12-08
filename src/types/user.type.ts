@@ -11,4 +11,5 @@ export type User = {
 	lastSeen?: string;
 	contacts: Contact[];
 	online?: boolean;
+	socketId?: string;
 };

@@ -17,8 +17,13 @@ class Chathandler {
 			emails[0],
 			emails[1]
 		);
-		if (allOnline) await res?.socket?.server?.io?.emit(sendChatKey, message);
-		else {
+		if (allOnline) {
+			const response = await res?.socket?.server?.io?.emit(
+				sendChatKey,
+				message
+			);
+			console.log(sendChatKey, message, response);
+		} else {
 			await chatService
 				.sendMessage(sendChatKey, message as IMsg)
 				// eslint-disable-next-line no-console

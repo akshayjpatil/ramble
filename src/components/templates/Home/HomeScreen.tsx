@@ -3,6 +3,7 @@ import { Fab } from '@mui/material';
 import { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import * as React from 'react';
+import { useEffectOnce } from 'react-use';
 
 import { ChatList, useChat } from '../../../hooks/useChat';
 import { useSocket } from '../../../hooks/useSocket';
@@ -14,11 +15,20 @@ export type HomeScreenProps = {
 };
 
 export const Home: NextPage<HomeScreenProps> = ({ host }: HomeScreenProps) => {
-	const { disconnectSocket } = useSocket(host);
+	const { socketId, connectSocket, disconnectSocket } = useSocket(host);
 	const router = useRouter();
 	const { chatList } = useChat();
+
+	useEffectOnce(() => {
+		connectSocket();
+	});
 	return (
-		<DefaultLayout title='Messages' home disconnectSocket={disconnectSocket}>
+		<DefaultLayout
+			title='Messages'
+			home
+			disconnectSocket={disconnectSocket}
+			socketId={socketId}
+		>
 			<ContactList chatList={chatList as ChatList} />
 			<Fab
 				aria-label={'new-message'}

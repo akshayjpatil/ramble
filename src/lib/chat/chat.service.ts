@@ -1,4 +1,4 @@
-import { IMsg, Message } from '../../types/contact.type';
+import type { IMsg, Message } from '../../types/contact.type';
 import { connectToDb } from '../mongodb';
 
 class ChatService {
@@ -7,6 +7,12 @@ class ChatService {
 		return (await db
 			.collection('messages')
 			.insertOne({ chatKey, ...message })) as unknown as Message;
+	}
+	public async getNewMessages(email: string) {
+		const db = await connectToDb();
+		return (await db
+			.collection('messages')
+			.find({ chatKey: `/${email}/i` })) as unknown as Message[];
 	}
 }
 

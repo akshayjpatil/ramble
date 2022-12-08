@@ -1,8 +1,12 @@
 import { Server as NetServer } from 'http';
 import { NextApiRequest } from 'next';
 import { Server as ServerIO } from 'socket.io';
+import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 
+import { chatService } from '../../lib/chat/chat.service';
+import { connectToDb } from '../../lib/mongodb';
 import { NextApiResponseServerIO } from '../../types/response.type';
+import { User } from '../../types/user.type';
 
 export const config = {
 	api: {
@@ -11,16 +15,40 @@ export const config = {
 };
 
 const handler = async (_req: NextApiRequest, res: NextApiResponseServerIO) => {
+	let io: ServerIO<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
 	if (!res.socket.server.io) {
 		console.log('New Socket.io server...');
 		// adapt Next's net Server to http Server
 		const httpServer: NetServer = res.socket.server as any;
-		const io = new ServerIO(httpServer, {
+		io = new ServerIO(httpServer, {
 			path: '/api/socket',
 		});
 		// append SocketIO server to Next.js socket server response
 		res.socket.server.io = io;
 	}
+	const db = connectToDb();
+	const changeStream = (await db)
+		.collection('users')
+		.watch([], { fullDocument: 'updateLookup' });
+	changeStream.on('change', async (next) => {
+		// process any change event
+		switch (next.operationType) {
+			case 'insert':
+				// console.log('inserted fields:', next.fullDocument.message);
+				// io.emit('new Message');
+				break;
+			case 'update':
+				const updatedTuple: User = next.fullDocument as User;
+				if (updatedTuple.online) {
+					const newMessages = await chatService.getNewMessages(
+						updatedTuple.email
+					);
+					// console.log(newMessages);
+				}
+				break;
+		}
+	});
+
 	res.end();
 };
 

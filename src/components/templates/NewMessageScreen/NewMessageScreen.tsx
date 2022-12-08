@@ -32,7 +32,7 @@ export const NewMessageScreen: NextPage<NewMessageScreenProps> = ({
 }: NewMessageScreenProps) => {
 	const router = useRouter();
 	const userEmail = getCookie(USER_EMAIL_COOKIE);
-	const { connected, disconnectSocket } = useSocket(host);
+	const { socketId, connected, disconnectSocket } = useSocket(host);
 	const {
 		control,
 		handleSubmit,
@@ -80,6 +80,7 @@ export const NewMessageScreen: NextPage<NewMessageScreenProps> = ({
 			back
 			title={'New Message'}
 			disconnectSocket={disconnectSocket}
+			socketId={socketId}
 		>
 			<Stack component={'form'} spacing={1} px={2}>
 				<TextField

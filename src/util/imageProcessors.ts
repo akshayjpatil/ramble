@@ -1,7 +1,7 @@
 import { stringToColor } from './converters';
 
 export const stringAvatar = (name: string, image: string | undefined) => {
-	if (image)
+	if (!!image)
 		return {
 			src: `${image}`,
 		};

@@ -11,6 +11,7 @@ import {
 	ListItemText,
 	Menu,
 	MenuItem,
+	NoSsr,
 	Toolbar,
 	Typography,
 } from '@mui/material';
@@ -34,6 +35,7 @@ export type DefaultLayoutProps = {
 	home?: boolean;
 	children: React.ReactNode;
 	disconnectSocket: () => Promise<void>;
+	socketId: string;
 };
 export const DefaultLayout = ({
 	children,
@@ -43,6 +45,7 @@ export const DefaultLayout = ({
 	titleIcon,
 	titleAdornment,
 	disconnectSocket,
+	socketId,
 }: DefaultLayoutProps) => {
 	const { status, data } = useSession();
 	const { user, updateUser } = useUser();
@@ -70,6 +73,7 @@ export const DefaultLayout = ({
 			await updateUser({
 				online: true,
 				profileImage: data?.user?.image,
+				socketId,
 			} as User);
 		};
 		if (status === 'authenticated') {
@@ -82,7 +86,6 @@ export const DefaultLayout = ({
 		switch (status) {
 			case 'authenticated':
 				setCookie(USER_EMAIL_COOKIE, data.user?.email);
-
 				break;
 			case 'unauthenticated':
 				router.replace({ pathname: '/api/auth/signin' });
@@ -100,101 +103,103 @@ export const DefaultLayout = ({
 	}
 
 	return (
-		<Box flexGrow={1}>
-			<Container disableGutters maxWidth={false} sx={{ paddingTop: 10 }}>
-				<AppBar position='fixed' sx={{ mb: 2 }}>
-					<Toolbar>
-						{back && (
-							<IconButton color='inherit' onClick={() => router.back()}>
-								<ArrowBackIcon />
-							</IconButton>
-						)}
+		<NoSsr>
+			<Box flexGrow={1}>
+				<Container disableGutters maxWidth={false} sx={{ paddingTop: 10 }}>
+					<AppBar position='fixed' sx={{ mb: 2 }}>
+						<Toolbar>
+							{back && (
+								<IconButton color='inherit' onClick={() => router.back()}>
+									<ArrowBackIcon />
+								</IconButton>
+							)}
 
-						<Typography
-							variant='h6'
-							component={'div'}
-							sx={{
-								flexGrow: 1,
-								display: 'flex',
-								alignItems: 'center',
-								'.MuiAvatar-root': {
-									marginRight: 2,
-								},
-								'.MuiBadge-root': {
-									marginLeft: 2,
-								},
-							}}
-						>
-							{titleIcon}
-							{title}
-							{titleAdornment}
-						</Typography>
-
-						{home && (
-							<IconButton
-								color='inherit'
-								aria-controls={open ? 'user-menu' : undefined}
-								aria-haspopup='true'
-								aria-expanded={open ? 'true' : undefined}
-								onClick={handleMenuClick}
+							<Typography
+								variant='h6'
+								component={'div'}
+								sx={{
+									flexGrow: 1,
+									display: 'flex',
+									alignItems: 'center',
+									'.MuiAvatar-root': {
+										marginRight: 2,
+									},
+									'.MuiBadge-root': {
+										marginLeft: 2,
+									},
+								}}
 							>
-								<OnlineBadge online={user?.online as boolean}>
-									<Avatar alt='profile image' src={`${data?.user?.image}`} />
-								</OnlineBadge>
-							</IconButton>
-						)}
-					</Toolbar>
-				</AppBar>
-				<Menu
-					id='user-menu'
-					aria-labelledby='user-menu'
-					anchorEl={anchorEl}
-					open={open}
-					onClose={handleMenuClose}
-					transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-					anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-					PaperProps={{
-						elevation: 0,
-						sx: {
-							overflow: 'visible',
-							filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-							mt: 1.5,
-							'& .MuiAvatar-root': {
-								width: 32,
-								height: 32,
-								ml: -0.5,
-								mr: 1,
+								{titleIcon}
+								{title}
+								{titleAdornment}
+							</Typography>
+
+							{home && (
+								<IconButton
+									color='inherit'
+									aria-controls={open ? 'user-menu' : undefined}
+									aria-haspopup='true'
+									aria-expanded={open ? 'true' : undefined}
+									onClick={handleMenuClick}
+								>
+									<OnlineBadge online={user?.online as boolean}>
+										<Avatar alt='profile image' src={`${data?.user?.image}`} />
+									</OnlineBadge>
+								</IconButton>
+							)}
+						</Toolbar>
+					</AppBar>
+					<Menu
+						id='user-menu'
+						aria-labelledby='user-menu'
+						anchorEl={anchorEl}
+						open={open}
+						onClose={handleMenuClose}
+						transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+						anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+						PaperProps={{
+							elevation: 0,
+							sx: {
+								overflow: 'visible',
+								filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+								mt: 1.5,
+								'& .MuiAvatar-root': {
+									width: 32,
+									height: 32,
+									ml: -0.5,
+									mr: 1,
+								},
+								'&:before': {
+									content: '""',
+									display: 'block',
+									position: 'absolute',
+									top: 0,
+									right: 25,
+									width: 10,
+									height: 10,
+									bgcolor: 'background.paper',
+									transform: 'translateY(-50%) rotate(45deg)',
+									zIndex: 0,
+								},
 							},
-							'&:before': {
-								content: '""',
-								display: 'block',
-								position: 'absolute',
-								top: 0,
-								right: 25,
-								width: 10,
-								height: 10,
-								bgcolor: 'background.paper',
-								transform: 'translateY(-50%) rotate(45deg)',
-								zIndex: 0,
-							},
-						},
-					}}
-				>
-					<MenuItem onClick={() => router.push({ pathname: '/profile' })}>
-						<ListItemIcon>
-							<AccountCircleIcon />
-						</ListItemIcon>
-						<ListItemText>{'Profile'}</ListItemText>
-					</MenuItem>
-					<MenuItem onClick={handleSignOut}>
-						<ListItemIcon>
-							<LogoutIcon />
-						</ListItemIcon>
-						<ListItemText>{'Sign-out'}</ListItemText>
-					</MenuItem>
-				</Menu>
-				{children}
-			</Container>
-		</Box>
+						}}
+					>
+						<MenuItem onClick={() => router.push({ pathname: '/profile' })}>
+							<ListItemIcon>
+								<AccountCircleIcon />
+							</ListItemIcon>
+							<ListItemText>{'Profile'}</ListItemText>
+						</MenuItem>
+						<MenuItem onClick={handleSignOut}>
+							<ListItemIcon>
+								<LogoutIcon />
+							</ListItemIcon>
+							<ListItemText>{'Sign-out'}</ListItemText>
+						</MenuItem>
+					</Menu>
+					{children}
+				</Container>
+			</Box>
+		</NoSsr>
 	);
 };
