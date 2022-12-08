@@ -12,5 +12,3 @@ export type IMsg = {
 	sender: string;
 	message: string;
 };
-
-export type Message = IMsg & { chatKey: string };

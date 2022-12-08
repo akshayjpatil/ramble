@@ -5,6 +5,7 @@ import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 
 import { chatService } from '../../lib/chat/chat.service';
 import { connectToDb } from '../../lib/mongodb';
+import { IMsg } from '../../types/contact.type';
 import { NextApiResponseServerIO } from '../../types/response.type';
 import { User } from '../../types/user.type';
 
@@ -40,10 +41,13 @@ const handler = async (_req: NextApiRequest, res: NextApiResponseServerIO) => {
 			case 'update':
 				const updatedTuple: User = next.fullDocument as User;
 				if (updatedTuple.online) {
-					const newMessages = await chatService.getNewMessages(
+					const newMessages: IMsg[] = await chatService.getNewMessages(
 						updatedTuple.email
 					);
-					// console.log(newMessages);
+					newMessages.map(async (message: IMsg) => {
+						await res?.socket?.server?.io?.emit('new-message', message);
+					});
+					await chatService.deleteMessages(updatedTuple.email);
 				}
 				break;
 		}

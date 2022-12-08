@@ -24,6 +24,7 @@ type MessageScreenProps = { host: string; email: string };
 const validationSchema = Yup.object().shape({
 	message: Yup.string()
 		.required('Did you forget to type?')
+		.lowercase()
 		// Include the list of non usable strings here for moderation
 		.matches(/^(?!.*(shit|ass))/, 'Hey mind your language!'),
 });

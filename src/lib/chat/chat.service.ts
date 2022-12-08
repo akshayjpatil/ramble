@@ -1,4 +1,4 @@
-import type { IMsg, Message } from '../../types/contact.type';
+import type { IMsg } from '../../types/contact.type';
 import { connectToDb } from '../mongodb';
 
 class ChatService {
@@ -6,13 +6,25 @@ class ChatService {
 		const db = await connectToDb();
 		return (await db
 			.collection('messages')
-			.insertOne({ ...message })) as unknown as Message;
+			.insertOne({ ...message })) as unknown as IMsg;
 	}
 	public async getNewMessages(email: string) {
 		const db = await connectToDb();
-		return (await db
+		const data = await db
 			.collection('messages')
-			.find({ chatKey: `/${email}/i` })) as unknown as Message[];
+			.find({
+				chatKey: new RegExp(email),
+			})
+			.toArray();
+		return data as unknown as IMsg[];
+	}
+
+	public async deleteMessages(email: string) {
+		const db = await connectToDb();
+		const data = await db.collection('messages').deleteMany({
+			chatKey: new RegExp(email),
+		});
+		return data as unknown as IMsg;
 	}
 }
 
