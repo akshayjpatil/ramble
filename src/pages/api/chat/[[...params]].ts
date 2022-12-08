@@ -24,7 +24,7 @@ class Chathandler {
 			console.log(message, response);
 		} else {
 			await chatService
-				.sendMessage(message.chatKey, message as IMsg)
+				.sendMessage(message as IMsg)
 				// eslint-disable-next-line no-console
 				.catch((e) => console.error(e));
 		}
