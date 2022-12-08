@@ -52,7 +52,7 @@ export const NewMessageScreen: NextPage<NewMessageScreenProps> = ({
 				message: data.message as string,
 			};
 			// dispatch message to other users
-			await fetch(`/api/chat/${getChatKey(data.email)}`, {
+			await fetch(`/api/chat`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -64,7 +64,11 @@ export const NewMessageScreen: NextPage<NewMessageScreenProps> = ({
 					email: data.email,
 					truncatedLastMessage: data.message,
 					messages: [
-						{ sender: userEmail as string, message: data.message as string },
+						{
+							sender: userEmail as string,
+							message: data.message as string,
+							chatKey: getChatKey(data.email) as string,
+						},
 					],
 				};
 

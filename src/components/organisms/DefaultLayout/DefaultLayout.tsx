@@ -20,9 +20,13 @@ import { useRouter } from 'next/router';
 import { signOut, useSession } from 'next-auth/react';
 import { MouseEvent, useCallback, useEffect, useState } from 'react';
 import { useEffectOnce } from 'react-use';
+import { DefaultEventsMap } from 'socket.io/dist/typed-events';
+import { Socket } from 'socket.io-client';
 
 import { USER_EMAIL_COOKIE } from '../../../constants/cookie.constant';
+import { ChatList, useChat } from '../../../hooks/useChat';
 import { useUser } from '../../../hooks/useUser';
+import { IMsg } from '../../../types/contact.type';
 import { User } from '../../../types/user.type';
 import { isOnIOS } from '../../../util/checkers';
 import { OnlineBadge } from '../../atoms/OnlineBadge';
@@ -38,6 +42,7 @@ export type DefaultLayoutProps = {
 	disconnectSocket: () => Promise<void>;
 	connected: boolean;
 	socketId: string;
+	socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 };
 export const DefaultLayout = ({
 	children,
@@ -50,10 +55,12 @@ export const DefaultLayout = ({
 	disconnectSocket,
 	connected,
 	socketId,
+	socket,
 }: DefaultLayoutProps) => {
 	const { status, data } = useSession();
 	const { user, updateUser } = useUser();
 	const router = useRouter();
+	const { chatList, setChatList } = useChat();
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
 	const handleMenuClick = (event: MouseEvent<HTMLElement>) => {
@@ -82,6 +89,15 @@ export const DefaultLayout = ({
 				socketId,
 			} as User);
 		};
+		socket.on('new-message', (message: IMsg) => {
+			for (const [key, _value] of Object.entries(chatList as ChatList)) {
+				if (key.includes(message.chatKey)) {
+					(chatList as ChatList)[`${key}`].messages?.push(message);
+					(chatList as ChatList)[`${key}`].newMessage = true;
+				}
+				setChatList(chatList);
+			}
+		});
 		if (status === 'authenticated') {
 			updateLastSeen();
 			setupBeforeUnloadListener();

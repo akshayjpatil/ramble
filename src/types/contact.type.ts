@@ -8,6 +8,7 @@ export type Contact = {
 };
 
 export type IMsg = {
+	chatKey: string;
 	sender: string;
 	message: string;
 };

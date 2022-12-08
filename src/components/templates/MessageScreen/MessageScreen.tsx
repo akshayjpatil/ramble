@@ -3,8 +3,9 @@ import SendIcon from '@mui/icons-material/Send';
 import { AppBar, Avatar, Box, IconButton, List } from '@mui/material';
 import { getCookie } from 'cookies-next';
 import { GetServerSideProps, NextPage } from 'next';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
+import { useEffectOnce } from 'react-use';
 import * as Yup from 'yup';
 
 import { USER_EMAIL_COOKIE } from '../../../constants/cookie.constant';
@@ -21,7 +22,10 @@ import { DefaultLayout } from '../../organisms/DefaultLayout';
 type MessageScreenProps = { host: string; email: string };
 
 const validationSchema = Yup.object().shape({
-	message: Yup.string().required('Did you forget to type?'),
+	message: Yup.string()
+		.required('Did you forget to type?')
+		// Include the list of non usable strings here for moderation
+		.matches(/^(?!.*(shit|ass))/, 'Hey mind your language!'),
 });
 
 type FormData = {
@@ -51,13 +55,10 @@ export const MessageScreen: NextPage<MessageScreenProps> = ({
 	);
 	const avatarProps = stringAvatar(contactUser.name, contactUser.profileImage);
 
-	useEffect((): any => {
-		// update chat on new message dispatched
-		socketProps.socket.on(getChatKey(email), (message: IMsg) => {
-			(chatList as ChatList)[`${email}`].messages?.push(message);
-			setChatList(chatList);
-		});
-	}, [chatList, email, getChatKey, host, setChatList, socketProps.socket]);
+	useEffectOnce((): any => {
+		(chatList as ChatList)[`${email}`].newMessage = false;
+		setChatList(chatList);
+	});
 
 	const sendMessage = useCallback(async () => {
 		await handleSubmit(async (data) => {
@@ -66,10 +67,11 @@ export const MessageScreen: NextPage<MessageScreenProps> = ({
 				const message: IMsg = {
 					sender: userEmail as string,
 					message: data.message as string,
+					chatKey: getChatKey(email) as string,
 				};
 
 				// dispatch message to other users
-				await fetch(`/api/chat/${getChatKey(email)}`, {
+				await fetch(`/api/chat`, {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
