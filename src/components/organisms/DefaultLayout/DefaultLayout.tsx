@@ -60,7 +60,7 @@ export const DefaultLayout = ({
 	const { status, data } = useSession();
 	const { user, updateUser } = useUser();
 	const router = useRouter();
-	const { chatList, setChatList } = useChat();
+	const { chatList, setChatList, getChatKey } = useChat();
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
 	const handleMenuClick = (event: MouseEvent<HTMLElement>) => {
@@ -91,10 +91,10 @@ export const DefaultLayout = ({
 		};
 		socket.on('new-message', (message: IMsg) => {
 			for (const [key, _value] of Object.entries(chatList as ChatList)) {
-				if (message.chatKey.includes(key)) {
+				if (message.chatKey === getChatKey(key)) {
 					(chatList as ChatList)[`${key}`].messages?.push(message);
 					(chatList as ChatList)[`${key}`].newMessage = true;
-				} else {
+				} else if (message.chatKey.includes(user.email)) {
 					(chatList as ChatList)[`${key}`] = {
 						name: 'Unknown',
 						email: message.sender,

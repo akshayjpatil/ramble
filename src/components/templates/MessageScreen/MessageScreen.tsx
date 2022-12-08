@@ -58,6 +58,8 @@ export const MessageScreen: NextPage<MessageScreenProps> = ({
 
 	useEffectOnce((): any => {
 		(chatList as ChatList)[`${email}`].newMessage = false;
+		if ((chatList as ChatList)[`${email}`].name === 'Unknown')
+			(chatList as ChatList)[`${email}`].name = contactUser.name;
 		setChatList(chatList);
 	});
 
