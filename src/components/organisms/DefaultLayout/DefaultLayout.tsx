@@ -94,6 +94,13 @@ export const DefaultLayout = ({
 				if (message.chatKey.includes(key)) {
 					(chatList as ChatList)[`${key}`].messages?.push(message);
 					(chatList as ChatList)[`${key}`].newMessage = true;
+				} else {
+					(chatList as ChatList)[`${key}`] = {
+						name: 'Unknown',
+						email: message.sender,
+						messages: [message],
+						newMessage: true,
+					};
 				}
 				setChatList(chatList);
 			}
