@@ -91,7 +91,7 @@ export const DefaultLayout = ({
 		};
 		socket.on('new-message', (message: IMsg) => {
 			for (const [key, _value] of Object.entries(chatList as ChatList)) {
-				if (key.includes(message.chatKey)) {
+				if (message.chatKey.includes(key)) {
 					(chatList as ChatList)[`${key}`].messages?.push(message);
 					(chatList as ChatList)[`${key}`].newMessage = true;
 				}
