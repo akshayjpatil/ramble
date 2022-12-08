@@ -33,7 +33,7 @@ export const MessageScreen: NextPage<MessageScreenProps> = ({
 	email,
 }: MessageScreenProps) => {
 	const { contactUser } = useContactUser({ email });
-	const { socket, socketId, connected, disconnectSocket } = useSocket(host);
+	const socketProps = useSocket(host);
 	const userEmail = getCookie(USER_EMAIL_COOKIE);
 	const { chatList, setChatList, getChatKey } = useChat();
 	const {
@@ -53,11 +53,11 @@ export const MessageScreen: NextPage<MessageScreenProps> = ({
 
 	useEffect((): any => {
 		// update chat on new message dispatched
-		socket.on(getChatKey(email), (message: IMsg) => {
+		socketProps.socket.on(getChatKey(email), (message: IMsg) => {
 			(chatList as ChatList)[`${email}`].messages?.push(message);
 			setChatList(chatList);
 		});
-	}, [chatList, email, getChatKey, host, setChatList, socket]);
+	}, [chatList, email, getChatKey, host, setChatList, socketProps.socket]);
 
 	const sendMessage = useCallback(async () => {
 		await handleSubmit(async (data) => {
@@ -101,8 +101,7 @@ export const MessageScreen: NextPage<MessageScreenProps> = ({
 			title={contactList?.name || contactUser.name}
 			titleIcon={<Avatar component={'span'} {...avatarProps} />}
 			titleAdornment={<OnlineBadge online={contactUser?.online as boolean} />}
-			disconnectSocket={disconnectSocket}
-			socketId={socketId}
+			{...socketProps}
 		>
 			<List sx={{ width: '100%', bgcolor: 'background.paper', mb: 10 }}>
 				{contactList?.messages &&
@@ -146,7 +145,7 @@ export const MessageScreen: NextPage<MessageScreenProps> = ({
 					<IconButton
 						color='inherit'
 						onClick={sendMessage}
-						disabled={!connected}
+						disabled={!socketProps.connected}
 						sx={{ px: 2 }}
 					>
 						<SendIcon />

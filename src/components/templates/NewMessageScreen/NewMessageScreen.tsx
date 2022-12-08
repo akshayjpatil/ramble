@@ -32,7 +32,7 @@ export const NewMessageScreen: NextPage<NewMessageScreenProps> = ({
 }: NewMessageScreenProps) => {
 	const router = useRouter();
 	const userEmail = getCookie(USER_EMAIL_COOKIE);
-	const { socketId, connected, disconnectSocket } = useSocket(host);
+	const socketProps = useSocket(host);
 	const {
 		control,
 		handleSubmit,
@@ -76,12 +76,7 @@ export const NewMessageScreen: NextPage<NewMessageScreenProps> = ({
 	}, [chatList, getChatKey, handleSubmit, router, setChatList, userEmail]);
 
 	return (
-		<DefaultLayout
-			back
-			title={'New Message'}
-			disconnectSocket={disconnectSocket}
-			socketId={socketId}
-		>
+		<DefaultLayout back title={'New Message'} {...socketProps}>
 			<Stack component={'form'} spacing={1} px={2}>
 				<TextField
 					placeholder='Name?'
@@ -131,7 +126,7 @@ export const NewMessageScreen: NextPage<NewMessageScreenProps> = ({
 						<IconButton
 							color='inherit'
 							onClick={sendMessage}
-							disabled={!connected}
+							disabled={!socketProps.connected}
 							sx={{ px: 2 }}
 						>
 							<SendIcon />

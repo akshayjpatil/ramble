@@ -34,7 +34,9 @@ export type DefaultLayoutProps = {
 	back?: boolean;
 	home?: boolean;
 	children: React.ReactNode;
+	connectSocket: () => Promise<void>;
 	disconnectSocket: () => Promise<void>;
+	connected: boolean;
 	socketId: string;
 };
 export const DefaultLayout = ({
@@ -44,7 +46,9 @@ export const DefaultLayout = ({
 	title,
 	titleIcon,
 	titleAdornment,
+	connectSocket,
 	disconnectSocket,
+	connected,
 	socketId,
 }: DefaultLayoutProps) => {
 	const { status, data } = useSession();
@@ -55,6 +59,7 @@ export const DefaultLayout = ({
 	const handleMenuClick = (event: MouseEvent<HTMLElement>) => {
 		setAnchorEl(event.currentTarget);
 	};
+
 	const handleMenuClose = () => {
 		setAnchorEl(null);
 	};
@@ -69,6 +74,7 @@ export const DefaultLayout = ({
 	};
 
 	useEffectOnce(() => {
+		if (!connected) connectSocket();
 		const updateLastSeen = async () => {
 			await updateUser({
 				online: true,

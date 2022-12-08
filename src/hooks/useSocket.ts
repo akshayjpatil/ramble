@@ -1,33 +1,35 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo } from 'react';
+import { useCookie } from 'react-use';
 import { connect } from 'socket.io-client';
 
 export const useSocket = (host: string) => {
 	// connected flag
-	const [connected, setConnected] = useState<boolean>(false);
-	const [socketId, setsocketId] = useState<string>('');
+	const [sock, setSocket, _deleteSocket] = useCookie('SOCKET');
 	// connect to socket server
 	const socket = connect(host, {
 		path: '/api/socket',
 	});
 
-	const connectSocket = async () => {
+	const connectSocket = useCallback(async () => {
 		// log socket connection
-		socket.on('connect', async () => {
+		await socket.on('connect', () => {
 			console.log('SOCKET CONNECTED!', socket.id);
-			setConnected(true);
-			setsocketId(socket.id);
+			setSocket(JSON.stringify({ connected: true, socketId: socket.id }));
 		});
-	};
+	}, [setSocket, socket]);
 
 	const disconnectSocket = useCallback(async () => {
-		await (await socket).disconnect();
+		socket.disconnect();
 	}, [socket]);
 
-	return {
-		socket,
-		socketId,
-		connected,
-		connectSocket,
-		disconnectSocket,
-	};
+	return useMemo(
+		() => ({
+			socket,
+			socketId: `${JSON.parse(`${sock}`)?.socketId}`,
+			connected: !!JSON.parse(`${sock}`)?.connected,
+			connectSocket,
+			disconnectSocket,
+		}),
+		[connectSocket, disconnectSocket, sock, socket]
+	);
 };

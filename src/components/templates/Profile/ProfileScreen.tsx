@@ -26,7 +26,7 @@ type FormData = {
 export const ProfileScreen: NextPage<ProfileScreenProps> = ({
 	host,
 }: ProfileScreenProps) => {
-	const { socketId, disconnectSocket } = useSocket(host);
+	const socketProps = useSocket(host);
 	const { data } = useSession();
 	const { user, updateUser } = useUser();
 	const {
@@ -56,12 +56,7 @@ export const ProfileScreen: NextPage<ProfileScreenProps> = ({
 	}, [handleSubmit, updateUser]);
 
 	return (
-		<DefaultLayout
-			back
-			title={'Profile'}
-			disconnectSocket={disconnectSocket}
-			socketId={socketId}
-		>
+		<DefaultLayout back title={'Profile'} {...socketProps}>
 			<Stack component={'form'} alignItems={'center'} spacing={2} px={2}>
 				<Avatar
 					alt='profile image'
